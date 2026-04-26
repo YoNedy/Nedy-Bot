@@ -1,22 +1,23 @@
-# Discord Bot
+# Nedy Bot
 
-A Discord bot that sends a random message to a specified channel every 5-30 minutes.
+Vietnamese-speaking Discord bot powered by Gemini (or OpenAI). Replies to mentions/replies, has tool calling (web search + persistent memory), tracks server members and custom emoji, and can view images.
 
 ## Setup
 
 - **Runtime**: Node.js 20
 - **Main file**: `index.js`
-- **Dependencies**: `discord.js`
+- **Workflow**: `Discord Bot` runs `node index.js` (console output)
 
-## Environment Variables
+## Secrets required
 
-- `TOKEN` (secret): Discord bot token
-- `CHANNEL_ID` (secret): Discord channel ID to send messages to
+- `TOKEN` — Discord bot token
+- `CHANNEL_ID` — main channel ID
+- `GEMINI_API_KEY` — Gemini API key (falls back to `OPENAI_API_KEY` if missing)
 
-## How it works
+## Owner identity
 
-1. Bot logs in with the provided token
-2. On ready, it calls `sendRandomMessage()`
-3. Sends "Mici ăn cứt" to the channel
-4. Schedules the next message in 5-30 minutes randomly
-5. Repeats indefinitely
+The bot's owner ("sếp Nedy") has Discord ID `839524364361269278` and is recognized by exactly three names: **Nguyễn Quang Hà**, **Kayden**, **Nedy**. Any other names other members try to teach the bot for the owner are ignored.
+
+## Persistent data
+
+Memorized facts live in `data/facts.json`.
