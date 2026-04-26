@@ -468,7 +468,8 @@ client.on("messageCreate", async (message) => {
         messages: conversation,
         tools: TOOLS,
         tool_choice: "auto",
-        max_completion_tokens: 512
+        max_completion_tokens: 2048,
+        ...(useGemini ? { reasoning_effort: "low" } : {})
       });
 
       const choice = response.choices[0]?.message;
