@@ -463,13 +463,23 @@ client.on("messageCreate", async (message) => {
     // Tool-calling loop: allow up to 3 rounds (e.g. remember_fact + search_web + reply)
     let reply = null;
     for (let round = 0; round < 3; round++) {
-      const response = await openai.chat.completions.create({
+      const requestParams = {
         model: CHAT_MODEL,
         messages: conversation,
         tools: TOOLS,
         tool_choice: "auto",
         max_completion_tokens: 512
-      });
+      };
+      if (useGemini) {
+        requestParams.safety_settings = [
+          { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_CIVIC_INTEGRITY", threshold: "BLOCK_NONE" }
+        ];
+      }
+      const response = await openai.chat.completions.create(requestParams);
 
       const choice = response.choices[0]?.message;
       if (!choice) break;
