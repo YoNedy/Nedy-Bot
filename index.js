@@ -398,8 +398,8 @@ client.on("messageCreate", async (message) => {
   ].join(", ");
 
   const contextNote = memberContext.length > 0
-    ? `Người nhắn tên là "${senderName}". Những người được nhắc đến trong tin nhắn: ${memberContext.map(m => `"${m.displayName}"`).join(", ")}. Để tag ai đó trong Discord, dùng định dạng sau: ${tagGuide}. Mày có thể dùng các tag này trực tiếp trong câu trả lời để ping họ.`
-    : `Người nhắn tên là "${senderName}". Để tag họ, dùng: <@${senderId}>. Mày có thể dùng tag này trực tiếp trong câu trả lời.`;
+    ? `Người nhắn tên là "${senderName}". Những người được nhắc đến trong tin nhắn: ${memberContext.map(m => `"${m.displayName}"`).join(", ")}. Để tag/ping ai đó trong Discord, dùng ĐÚNG định dạng <@id> sau: ${tagGuide}. NÊN tag thẳng người mày đang nói tới (đặc biệt khi roast/ragebait/đáp trả/cà khịa target) để họ nhận thông báo — đừng chỉ viết tên thường, viết tên thường ko ping được. Nguyên tắc: nhắc đến ai có trong danh sách tag → dùng <@id> của họ thay vì tên thường.`
+    : `Người nhắn tên là "${senderName}". Để tag/ping họ, dùng định dạng <@${senderId}>. NÊN dùng tag này trong câu trả lời để họ nhận thông báo, nhất là khi đang nói trực tiếp với họ hoặc roast họ.`;
 
   try {
     await message.channel.sendTyping();
@@ -533,11 +533,19 @@ client.on("messageCreate", async (message) => {
     }
 
     reply = reply || "Tao không hiểu mày đang nói gì.";
-    await message.reply(reply);
+    await message.reply({
+      content: reply,
+      allowedMentions: { parse: ["users"], repliedUser: true },
+    });
     console.log(`Replied to ${senderName}: ${userText}`);
   } catch (err) {
     console.error("Error replying:", err.message);
-    await message.reply("Lỗi rồi, thử lại sau đi mày.").catch(() => {});
+    await message
+      .reply({
+        content: "Lỗi rồi, thử lại sau đi mày.",
+        allowedMentions: { parse: [], repliedUser: true },
+      })
+      .catch(() => {});
   }
 });
 
